@@ -20,6 +20,7 @@
   "author": "Rob Middleton",
   "license": "MIT",
   "dependencies": {
-    "gift": "0.0.5"
+    "package": "~1.0.1",
+    "open": "0.0.2"
   }
 }
