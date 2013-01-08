@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var pkg = require("package")
 var open = require("open")
 var git = require("gift")
