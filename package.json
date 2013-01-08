@@ -1,0 +1,25 @@
+{
+  "name": "pullrequest",
+  "version": "0.0.0",
+  "description": "Create a GitHub pull request from the repository in the current directory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Rob-ot/pullrequest.git"
+  },
+  "keywords": [
+    "github",
+    "pull",
+    "request",
+    "pullrequest",
+    "git"
+  ],
+  "author": "Rob Middleton",
+  "license": "MIT",
+  "dependencies": {
+    "gift": "0.0.5"
+  }
+}
