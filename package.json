@@ -1,11 +1,11 @@
 {
   "name": "pullrequest",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "preferGlobal": "true",
   "description": "Create a GitHub pull request from the repository in the current directory",
   "main": "index.js",
   "bin": {
-    "http-server": "./index.js"
+    "pullrequest": "./index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
