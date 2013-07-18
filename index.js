@@ -26,5 +26,17 @@ git("./").branch(function (err, branch) {
     process.exit(1)
   }
 
-  open("http://" + github + "/pull/new/" + branch.name)
+  var destinationBranch = null
+  var sourceBranch = branch.name
+
+  if (process.argv[2] === "to") {
+    destinationBranch = process.argv[3]
+  }
+
+  if (destinationBranch) {
+    open("http://" + github + "/pull/new/" + destinationBranch + "..." + sourceBranch)
+  }
+  else {
+    open("http://" + github + "/pull/new/" + sourceBranch)
+  }
 })
