@@ -20,6 +20,7 @@ function normalizeRepoUrl (url) {
     .replace("git://", "")
     .replace("git@", "")
     .replace("https://", "")
+    .replace("ssh://", "")
     .replace(":", "/")
     .replace(/\.git$/, "")
   return "http://" + stripped
