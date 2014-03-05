@@ -2,7 +2,7 @@
   "name": "pullrequest",
   "version": "0.3.0",
   "preferGlobal": "true",
-  "description": "Create a GitHub pull request from the repository in the current directory",
+  "description": "A simple command line tool to open your browser to a GitHub pullrequest page.",
   "main": "index.js",
   "bin": {
     "pullrequest": "./index.js"
