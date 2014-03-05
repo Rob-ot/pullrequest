@@ -1,42 +1,85 @@
 #!/usr/bin/env node
 
-var pkg = require("package")
 var open = require("open")
-var git = require("gift")
+var gift = require("gift")
+var _pick = require("lodash.pick")
 
-var repository = pkg("./").repository
+var repo = gift("./")
 
-if (!repository || !repository.url) {
-  console.error("Invalid package.json repository. http://package.json.nodejitsu.com/")
+function fatalError (err) {
+  console.error(err)
   process.exit(1)
 }
 
-var url = repository.url
+function gitError (err) {
+  fatalError("Git error: " + err)
+}
 
-var github = url
-  .replace("git://", "")
-  .replace("git@", "")
-  .replace("https://", "")
-  .replace(":", "/")
-  .replace(/\.git$/, "")
+function normalizeRepoUrl (url) {
+  var stripped = url
+    .replace("git://", "")
+    .replace("git@", "")
+    .replace("https://", "")
+    .replace(":", "/")
+    .replace(/\.git$/, "")
+  return "http://" + stripped
+}
 
-git("./").branch(function (err, branch) {
-  if (err) {
-    console.error("Git error: " + err)
-    process.exit(1)
+function listRemotes (cb) {
+  repo.config(function (err, config) {
+    if (err) return cb(err)
+
+    var urlConfigs = _pick(config.items, function (value, key) {
+      return key.match(/remote\.\w+\.url/)
+    })
+
+    var urls = {}
+    for (var key in urlConfigs) {
+      urls[key.split(".")[1]] = urlConfigs[key]
+    }
+
+    cb(null, urls)
+  })
+}
+
+function preferredUrl (remotes) {
+  var remote
+  if (remotes["pullrequest"]) {
+    remote = "pullrequest"
+  }
+  else if (remotes["origin"]) {
+    remote = "origin"
   }
 
-  var destinationBranch = null
-  var sourceBranch = branch.name
-
-  if (process.argv[2] === "to") {
-    destinationBranch = process.argv[3]
+  if (!remote) {
+    return fatalError("No 'pullrequest' or 'origin' remote found, please add an origin. 'git remote add origin git@github.com:me/myrepo.git'")
   }
 
-  if (destinationBranch) {
-    open("http://" + github + "/pull/new/" + destinationBranch + "..." + sourceBranch)
-  }
-  else {
-    open("http://" + github + "/pull/new/" + sourceBranch)
-  }
+  return remotes[remote]
+}
+
+
+listRemotes(function (err, remotes) {
+  if (err) return gitError(err)
+
+  var gitUrl = preferredUrl(remotes)
+  var repoUrl = normalizeRepoUrl(gitUrl)
+
+  repo.branch(function (err, branch) {
+    if (err) return gitError(err)
+
+    var sourceBranch = branch.name
+    var destinationBranch
+
+    if (process.argv[2] === "to") {
+      destinationBranch = process.argv[3]
+    }
+
+    if (destinationBranch) {
+      open(repoUrl + "/pull/new/" + destinationBranch + "..." + sourceBranch)
+    }
+    else {
+      open(repoUrl + "/pull/new/" + sourceBranch)
+    }
+  })
 })
