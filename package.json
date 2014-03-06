@@ -1,6 +1,6 @@
 {
   "name": "pullrequest",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "preferGlobal": "true",
   "description": "A simple command line tool to open your browser to a GitHub pullrequest page.",
   "main": "index.js",
